@@ -44,8 +44,13 @@ def create_app(test_config=None):
     app.register_blueprint(product.bp)
     app.add_url_rule('/', endpoint='home')
 
+    from . import admin
+    app.register_blueprint(admin.bp)
+    app.add_url_rule('/', endpoint='home')
+
     from . import category
     app.register_blueprint(category.bp)
+    app.add_url_rule('/', endpoint='home')
 
     app.config["IMAGE_UPLOADS"] = "book/static/uploads"
     app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
