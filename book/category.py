@@ -1,6 +1,6 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
-)
+    Blueprint, flash, g, redirect, render_template, request, url_for,
+    session)
 from werkzeug.exceptions import abort
 
 from book.auth import login_required
@@ -22,11 +22,14 @@ def index():
 
 @bp.route('/category/index')
 def all():
+    user_id = session.get('user_id')
     db = get_db()
     categories = db.execute(
         'SELECT c.id, name, author_id'
         ' FROM category c JOIN user u ON c.author_id = u.id'
+        ' WHERE author_id = ?'
         ' ORDER BY name DESC'
+        , (user_id,)
     ).fetchall()
     return render_template('category/index.html', categories=categories)
 
