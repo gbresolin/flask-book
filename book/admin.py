@@ -9,24 +9,136 @@ from book.db import get_db
 
 bp = Blueprint('admin', __name__)
 
+
 @bp.route('/admin')
 @login_required
 @admin_required
 def all():
     db = get_db()
+    cats = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name DESC'
+    ).fetchall()
+
     users = db.execute(
         'SELECT *'
         ' FROM user'
         ' ORDER BY id DESC'
     ).fetchall()
-    return render_template('administration/index.html', users=users)
+    return render_template('administration/index.html', users=users, cats=cats)
+
+
+@bp.route('/admin/category')
+@login_required
+@admin_required
+def category():
+    db = get_db()
+    cats = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name DESC'
+    ).fetchall()
+
+    categories = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY id DESC'
+    ).fetchall()
+    return render_template('administration/category.html', categories=categories, cats=cats)
+
+
+@bp.route('/admin/product')
+@login_required
+@admin_required
+def product():
+    db = get_db()
+    cats = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name DESC'
+    ).fetchall()
+
+    products = db.execute(
+        'SELECT id, name, description, price, state'
+        ' FROM product'
+        ' ORDER BY id DESC'
+    ).fetchall()
+    return render_template('administration/product.html', products=products, cats=cats)
+
+
+def get_user(id):
+    user = get_db().execute(
+        'SELECT id, username, isAdmin'
+        ' FROM user'
+        ' WHERE id = ?',
+        (id,)
+    ).fetchone()
+
+    if user is None:
+        abort(404, "Le user id {0} n'existe pas.".format(id))
+
+    return user
+
 
 @bp.route('/user/<int:id>/delete', methods=('POST',))
 @login_required
 @admin_required
 def delete(id):
-        db = get_db()
-        db.execute('DELETE FROM user WHERE id = ?', (id,))
-        db.commit()
-        flash('Utilisateur supprimé !', 'success')
-        return redirect(url_for('admin.admin'))
+    db = get_db()
+    db.execute('DELETE FROM user WHERE id = ?', (id,))
+    db.commit()
+    flash('Utilisateur supprimé !', 'success')
+    return redirect(url_for('admin.all'))
+
+
+@bp.route('/category/<int:id>/delete', methods=('POST',))
+@login_required
+@admin_required
+def delete_category(id):
+    db = get_db()
+    db.execute('DELETE FROM category WHERE id = ?', (id,))
+    db.commit()
+    flash('Catégorie supprimée !', 'success')
+    return redirect(url_for('admin.category'))
+
+
+@bp.route('/product/<int:id>/delete', methods=('POST',))
+@login_required
+@admin_required
+def delete_product(id):
+    db = get_db()
+    db.execute('DELETE FROM product WHERE id = ?', (id,))
+    db.commit()
+    flash('Article supprimé !', 'success')
+    return redirect(url_for('admin.product'))
+
+
+@bp.route('/user/<int:id>/update', methods=('GET', 'POST'))
+@login_required
+@admin_required
+def update(id):
+    user = get_user(id)
+
+    if request.method == 'POST':
+        username = request.form['username']
+        admin = request.form['admin']
+        error = None
+
+        if not username:
+            error = 'Username is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'UPDATE user SET username = ?, isAdmin = ?'
+                ' WHERE id = ?',
+                (username, admin, id)
+            )
+            db.commit()
+            flash('Modification réussie !', 'success')
+            return redirect(url_for('admin.all'))
+
+    return render_template('administration/update-user.html', user=user)

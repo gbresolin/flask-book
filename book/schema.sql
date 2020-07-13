@@ -30,6 +30,15 @@ CREATE TABLE category (
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
 
+CREATE TABLE comment (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  comment text NOT NULL,
+  author_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  FOREIGN KEY (author_id) REFERENCES user (id),
+  FOREIGN KEY (product_id) REFERENCES product (id)
+);
+
 INSERT INTO user(id,username,password,isAdmin) VALUES('1', 'gregory', 'pbkdf2:sha256:150000$PU2JIbfY$c5f0273db55cd9e1911852298d2a985c7c6bac9ebcf0c368852061abb4a5a6e7',1);
 INSERT INTO user(id,username,password,isAdmin) VALUES('2', 'george', 'pbkdf2:sha256:150000$PU2JIbfY$c5f0273db55cd9e1911852298d2a985c7c6bac9ebcf0c368852061abb4a5a6e7',1);
 INSERT INTO user(id,username,password,isAdmin) VALUES('3', 'tony', 'pbkdf2:sha256:150000$VgMV7kx2$9b6414370ed48f11355f4e90781594ed8ce9406a040245142299d32f1bd57ed5',0);
@@ -38,3 +47,4 @@ INSERT INTO product(id,author_id,category_id,name,description,price,state,image)
 INSERT INTO category(id,name,author_id) VALUES('1', 'Histoire', '1');
 INSERT INTO category(id,name,author_id) VALUES('2', 'Humour', '1');
 INSERT INTO category(id,name,author_id) VALUES('3', 'Manga', '1');
+INSERT INTO comment(id,comment,author_id,product_id) VALUES('1', 'Un livre que tout fan de DBZ doit posséder !', '3', '2');

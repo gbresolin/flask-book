@@ -13,12 +13,6 @@
       <div class="col-lg-3">
 
         <h1 class="my-4">Résultats</h1>
-        <small class="text-muted">Trouvez le livre qu'il vous faut dans nos rubriques :</small>
-        <div class="list-group">
-          <a href="#" class="list-group-item">Bandes dessinées</a>
-          <a href="#" class="list-group-item">Humour</a>
-          <a href="#" class="list-group-item">Category 3</a>
-        </div>
 
       </div>
       <!-- /.col-lg-3 -->
@@ -32,13 +26,13 @@
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               {% if product['image'] %}
-              <a href="#"><img class="card-img-top" src="/static/uploads/{{ product['image'] }}" alt=""></a>
+              <a href="/{{ product['id'] }}/detail"><img class="card-img-top" src="/static/uploads/{{ product['image'] }}" alt=""></a>
               {% else %}
-              <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+              <a href="/{{ product['id'] }}/detail"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
               {% endif %}
               <div class="card-body">
                 <h4 class="card-title">
-                  <a href="#">{{ product['name'] }}</a>
+                  <a href="/{{ product['id'] }}/detail">{{ product['name'] }}</a>
                 </h4>
                 <h5>{{ product['price'] }} €</h5><span style="font-style: italic;color: darkcyan;">{{ product['state'] }}</span>
                 <p class="card-text">{{ product['description'] | truncate(80) }}</p>

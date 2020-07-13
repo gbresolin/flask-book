@@ -27,9 +27,9 @@ def register():
         elif len(password) < 6:
             error = 'Mot de passe trop court.'
         elif re.search('[0-9]', password) is None:
-            error = 'Make sure your password has a number in it.'
+            error = 'Votre mot de passe doit contenir au moins un chiffre.'
         elif re.search('[A-Z]', password) is None:
-            error = 'Make sure your password has a capital letter in it.'
+            error = 'Votre mot de passe doit contenir au moins une lettre majuscule.'
         elif db.execute(
                 'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
@@ -61,9 +61,9 @@ def login():
         ).fetchone()
 
         if user is None:
-            error = 'Incorrect username.'
+            error = 'Login incorrect.'
         elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+            error = 'Mot de passe incorrect.'
 
         if error is None:
             session.clear()

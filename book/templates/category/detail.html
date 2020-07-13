@@ -2,7 +2,7 @@
 
 {% extends 'base.html' %}
 
-{% block title %}Catégorie{% endblock %}
+{% block title %}Catégorie {{ title }}{% endblock %}
 
 {% block content %}
 
@@ -12,13 +12,7 @@
 
       <div class="col-lg-3">
 
-        <h1 class="my-4">Résultats</h1>
-        <small class="text-muted">Trouvez le livre qu'il vous faut dans nos rubriques :</small>
-        <div class="list-group">
-          <a href="#" class="list-group-item">Bandes dessinées</a>
-          <a href="#" class="list-group-item">Humour</a>
-          <a href="#" class="list-group-item">Category 3</a>
-        </div>
+        <h1 class="my-4">Catégorie {{ title }}</h1>
 
       </div>
       <!-- /.col-lg-3 -->
@@ -32,13 +26,13 @@
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               {% if category['image'] %}
-              <a href="#"><img class="card-img-top" src="/static/uploads/{{ category['image'] }}" alt=""></a>
+              <a href="/{{ category['id'] }}/detail"><img class="card-img-top" src="/static/uploads/{{ category['image'] }}" alt=""></a>
               {% else %}
-              <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+              <a href="/{{ category['id'] }}/detail"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
               {% endif %}
               <div class="card-body">
                 <h4 class="card-title">
-                  <a href="#">{{ category['name'] }}</a>
+                  <a href="/{{ category['id'] }}/detail">{{ category['name'] }}</a>
                 </h4>
                 <h5>{{ category['price'] }} €</h5><span style="font-style: italic;color: darkcyan;">{{ category['state'] }}</span>
                 <p class="card-text">{{ category['description'] | truncate(80) }}</p>

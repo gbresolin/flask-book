@@ -9,18 +9,8 @@ from book.db import get_db
 bp = Blueprint('category', __name__)
 
 
-@bp.route('/')
-def index():
-    db = get_db()
-    categories = db.execute(
-        'SELECT c.id, name, author_id'
-        ' FROM category c JOIN user u ON c.author_id = u.id'
-        ' ORDER BY name DESC'
-    ).fetchall()
-    return render_template('product/home.html', categories=categories)
-
-
 @bp.route('/category/index')
+@login_required
 def all():
     user_id = session.get('user_id')
     db = get_db()
@@ -34,16 +24,26 @@ def all():
     return render_template('category/index.html', categories=categories)
 
 
-@bp.route('/<int:id>/category', methods=('GET', 'POST'))
+@bp.route('/category/<int:id>')
 def detail(id):
     db = get_db()
+    cats = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name DESC'
+    ).fetchall()
+
     details = db.execute(
         'SELECT *'
         ' FROM product JOIN category ON product.category_id = category.id'
         ' WHERE category_id = ?',
         (id,)
     ).fetchall()
-    return render_template('category/detail.html', details=details, title=id)
+
+    if not details:
+        flash('Pas de livres trouvés pour cette catégorie.', 'danger')
+
+    return render_template('category/detail.html', details=details, title=id, cats=cats)
 
 
 def get_cat(id, check_author=True):

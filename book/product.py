@@ -17,6 +17,12 @@ def search():
     query = "%" + request.args['q'] + "%"
 
     db = get_db()
+    cats = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name DESC'
+    ).fetchall()
+
     searches = db.execute(
         'SELECT *'
         ' FROM product p JOIN user u ON p.author_id = u.id'
@@ -24,19 +30,34 @@ def search():
     ).fetchall()
     if not searches:
         flash('Pas de résultats trouvés pour ' + query.replace("%", ""), 'danger')
-    return render_template('product/search.html', searches=searches, query=query.replace("%", ""))
+    return render_template('product/search.html', searches=searches, query=query.replace("%", ""), cats=cats)
 
 
 @bp.route('/<int:id>/detail', methods=('GET', 'POST'))
 def detail(id):
     db = get_db()
+
+    comments = db.execute(
+        'SELECT c.id, comment, username'
+        ' FROM comment c JOIN user u ON c.author_id = u.id'
+        ' JOIN product p ON c.product_id = ?'
+        ' GROUP BY comment',
+        (id, )
+    ).fetchall()
+
+    cats = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name DESC'
+    ).fetchall()
+
     details = db.execute(
         'SELECT p.id, name, description, price, state, image, created, author_id, username'
         ' FROM product p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
         (id,)
     ).fetchall()
-    return render_template('product/detail.html', details=details, title=id)
+    return render_template('product/detail.html', details=details, title=id, cats=cats, comments=comments)
 
 
 @bp.route('/')
@@ -47,7 +68,15 @@ def index():
         ' FROM product p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('product/home.html', products=products)
+
+    db = get_db()
+    cats = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name DESC'
+    ).fetchall()
+
+    return render_template('product/home.html', products=products, cats=cats)
 
 
 @bp.route('/inventory')
