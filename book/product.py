@@ -42,7 +42,7 @@ def detail(id):
         ' FROM comment c JOIN user u ON c.author_id = u.id'
         ' JOIN product p ON c.product_id = ?'
         ' GROUP BY comment',
-        (id, )
+        (id,)
     ).fetchall()
 
     cats = db.execute(
@@ -91,6 +91,10 @@ def inventory():
         ' ORDER BY created DESC'
         , (user_id,)
     ).fetchall()
+
+    if not products:
+        flash('Vous n\'avez pas encore de livre en vente.', 'danger')
+
     return render_template('product/inventory.html', products=products)
 
 

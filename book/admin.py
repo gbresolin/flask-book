@@ -92,7 +92,7 @@ def delete(id):
     return redirect(url_for('admin.all'))
 
 
-@bp.route('/category/<int:id>/delete', methods=('POST',))
+@bp.route('/admin/category/<int:id>/delete', methods=('POST',))
 @login_required
 @admin_required
 def delete_category(id):

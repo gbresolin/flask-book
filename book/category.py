@@ -11,16 +11,20 @@ bp = Blueprint('category', __name__)
 
 @bp.route('/category/index')
 @login_required
-def all():
+def get_cat_user():
     user_id = session.get('user_id')
     db = get_db()
     categories = db.execute(
         'SELECT c.id, name, author_id'
         ' FROM category c JOIN user u ON c.author_id = u.id'
         ' WHERE author_id = ?'
-        ' ORDER BY name DESC'
+        ' ORDER BY name ASC'
         , (user_id,)
     ).fetchall()
+
+    if not categories:
+        flash('Vous n\'avez pas encore ajouté de catégorie.', 'danger')
+
     return render_template('category/index.html', categories=categories)
 
 
@@ -83,7 +87,8 @@ def create():
                 (name, g.user['id'])
             )
             db.commit()
-            return redirect(url_for('category.index'))
+            flash('Catégorie ajoutée !', 'success')
+            return redirect(url_for('category.get_cat_user'))
 
     return render_template('category/create.html')
 
@@ -96,4 +101,4 @@ def delete(id):
     db.execute('DELETE FROM category WHERE id = ?', (id,))
     db.commit()
     flash('Catégorie supprimée !', 'success')
-    return redirect(url_for('category.index'))
+    return redirect(url_for('category.get_cat_user'))
