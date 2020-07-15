@@ -115,6 +115,18 @@ def get_product(id, check_author=True):
     return product
 
 
+def get_image(id):
+    get_product(id)
+    image = get_db().execute(
+        'SELECT image'
+        ' FROM product'
+        ' WHERE id = ?',
+        (id,)
+    ).fetchone()
+
+    return image
+
+
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
@@ -152,8 +164,13 @@ def update(id):
 @login_required
 def delete(id):
     get_product(id)
+    get_image(id)
     db = get_db()
+    file = get_image(id)
+    location = "book/static/uploads"
     db.execute('DELETE FROM product WHERE id = ?', (id,))
+    for filename in file:
+        os.remove(os.path.join(location, filename))
     db.commit()
     flash('Livre supprimé !', 'success')
     return redirect(url_for('product.inventory'))
