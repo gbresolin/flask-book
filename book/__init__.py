@@ -82,7 +82,7 @@ def create_app(test_config=None):
 
     @app.route('/create', methods=('GET', 'POST'))
     @login_required
-    def create():
+    def create_product():
         state_list = ['Neuf', 'Très bon état', 'Bon état', 'Etat correct', 'Mauvais état']
 
         db = get_db()

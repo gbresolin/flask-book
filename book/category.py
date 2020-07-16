@@ -67,6 +67,16 @@ def get_cat(id, check_author=True):
     return product
 
 
+def all_category():
+    db = get_db()
+    categories = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name ASC'
+    ).fetchall()
+    return categories
+
+
 @bp.route('/category/create', methods=('GET', 'POST'))
 @login_required
 def create():

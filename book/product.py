@@ -6,6 +6,7 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from book.auth import login_required
+from book.category import all_category
 from book.db import get_db
 
 bp = Blueprint('product', __name__)
@@ -16,11 +17,7 @@ def search():
     query = "%" + request.args['q'] + "%"
 
     db = get_db()
-    cats = db.execute(
-        'SELECT id, name'
-        ' FROM category'
-        ' ORDER BY name ASC'
-    ).fetchall()
+    cats = all_category()
 
     searches = db.execute(
         'SELECT *'
@@ -45,11 +42,7 @@ def detail(id):
         (id,)
     ).fetchall()
 
-    cats = db.execute(
-        'SELECT id, name'
-        ' FROM category'
-        ' ORDER BY name DESC'
-    ).fetchall()
+    cats = all_category()
 
     details = db.execute(
         'SELECT p.id, name, description, price, state, image, created, author_id, username'
@@ -69,12 +62,7 @@ def index():
         ' ORDER BY created DESC'
     ).fetchall()
 
-    db = get_db()
-    cats = db.execute(
-        'SELECT id, name'
-        ' FROM category'
-        ' ORDER BY name ASC'
-    ).fetchall()
+    cats = all_category()
 
     return render_template('product/home.html', products=products, cats=cats)
 
@@ -92,10 +80,12 @@ def inventory():
         , (user_id,)
     ).fetchall()
 
+    cats = all_category()
+
     if not products:
         flash('Vous n\'avez pas encore de livre en vente.', 'danger')
 
-    return render_template('product/inventory.html', products=products)
+    return render_template('product/inventory.html', products=products, cats=cats)
 
 
 def get_product_cart(id, check_author=True):

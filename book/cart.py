@@ -1,11 +1,9 @@
-import os
-
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for,
+    Blueprint, flash, g, redirect, render_template, url_for,
     session)
-from werkzeug.exceptions import abort
 
 from book.auth import login_required
+from book.category import all_category
 from book.db import get_db
 from book.product import get_product_cart
 
@@ -30,7 +28,9 @@ def cart():
     for row in panier:
         totalPrice += row[2]
 
-    return render_template('cart/index.html', panier=panier, totalPrice=totalPrice)
+    cats = all_category()
+
+    return render_template('cart/index.html', panier=panier, totalPrice=totalPrice, cats=cats)
 
 
 def get_cart(id, check_author=True):
@@ -58,19 +58,21 @@ def addCart(id):
         (user_id,)
     ).fetchone()
 
-    for itemid in verifexistitem:
-        if itemid == id:
-            flash('Ce produit est déjà dans votre panier.', 'danger')
-            return redirect(url_for('cart.cart'))
-        else:
-            db.execute(
-                'INSERT INTO cart (product_id, author_id)'
-                ' VALUES (?, ?)',
-                (id, g.user['id'])
-            )
-            db.commit()
-            flash('Produit ajouté dans votre panier !', 'success')
-            return redirect(url_for('cart.cart'))
+    if verifexistitem is None:
+        db.execute(
+            'INSERT INTO cart (product_id, author_id)'
+            ' VALUES (?, ?)',
+            (id, g.user['id'])
+        )
+        db.commit()
+        flash('Produit ajouté dans votre panier !', 'success')
+        return redirect(url_for('cart.cart'))
+
+    else:
+        for itemid in verifexistitem:
+            if itemid == id:
+                flash('Ce produit est déjà dans votre panier.', 'danger')
+                return redirect(url_for('cart.cart'))
 
 
 @bp.route('/cart/delete/<int:id>', methods=('GET', 'POST'))
