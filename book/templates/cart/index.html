@@ -1,0 +1,102 @@
+{# app/templates/about.html #}
+
+{% extends 'base.html' %}
+
+{% block title %}BookShop : Mon Panier{% endblock %}
+
+{% block content %}
+
+  <!-- Page Content -->
+  <div class="container">
+    <p class="lead">Sur BookShop, achetez et vendez vos livres neufs ou d'occasion !</p>
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">E-COMMERCE CART</h1>
+     </div>
+</section>
+
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col"> </th>
+                            <th scope="col">Produit</th>
+                            <th scope="col">Disponibilité</th>
+                            <th scope="col" class="text-center">Quantité</th>
+                            <th scope="col" class="text-right">Prix</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for cart in panier %}
+                        <tr>
+                            <td>
+                              {% if cart['image'] %}
+                              <img class="card-img-panier" src="/static/uploads/{{ cart['image'] }}" alt="">
+                              {% else %}
+                              <img class="card-img-panier" src="http://placehold.it/700x400" alt="">
+                              {% endif %}
+                            </td>
+                            <td>{{ cart['name'] }}</td>
+                            <td>En stock</td>
+                            <td><input class="form-control" type="text" value="1" /></td>
+                            <td class="text-right">{{ cart['price'] }} €</td>
+                            <td class="text-right">
+                            <form action="{{ url_for('cart.deleteItem', id=cart['id']) }}" method="post">
+                              <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button>
+                            </form>
+
+                            </td>
+                        </tr>
+                  {% if not loop.last %}
+                  {% endif %}
+                  {% endfor %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Sub-Total</td>
+                            <td class="text-right">{{totalPrice}} €</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Frais de port</td>
+                            <td class="text-right">6,9 €</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total</strong></td>
+                            <td class="text-right"><strong>{{totalPrice + 6.90}} €</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="row">
+                <div class="col-sm-12  col-md-6">
+                    <button class="btn btn-block btn-light">Continue Shopping</button>
+                </div>
+                <div class="col-sm-12 col-md-6 text-right">
+                    <button class="btn btn-lg btn-block btn-success text-uppercase">Payer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  </div>
+  <!-- /.container -->
+
+
+{% endblock %}

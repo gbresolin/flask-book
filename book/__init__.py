@@ -52,6 +52,10 @@ def create_app(test_config=None):
     app.register_blueprint(category.bp)
     app.add_url_rule('/', endpoint='home')
 
+    from . import cart
+    app.register_blueprint(cart.bp)
+    app.add_url_rule('/', endpoint='home')
+
     app.config["IMAGE_UPLOADS"] = "book/static/uploads"
     app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
     app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
@@ -143,6 +147,7 @@ def create_app(test_config=None):
                     (name, description, category, price, state, img, g.user['id'])
                 )
                 db.commit()
+                flash('Livre ajouté !', 'success')
                 return redirect(url_for('product.index'))
 
         return render_template('product/create.html', state_list=state_list, categories=categories)

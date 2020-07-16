@@ -35,8 +35,8 @@
           <div class="form-group">
             <label for="price">Catégorie</label>
               <select class="custom-select mr-sm-2" name="category" id="category">
-                {% for each in category_list %}
-                <option value="{{each}}">{{each}}</option>
+                {% for product in category_list %}
+                <option value="{{ request.form['category'] or product['id'] }}">{{ product['name'] }}</option>
                 {% endfor %}
               </select>
           </div>
@@ -50,7 +50,7 @@
             <label for="price">Etat du Livre</label>
               <select class="custom-select mr-sm-2" name="state" id="state">
                 {% for each in state_list %}
-                <option value="{{ request.form['state'] or product['state'] }}">{{each}}</option>
+                <option value="{{ request.form['state'] or each }}">{{each}}</option>
                 {% endfor %}
               </select>
           </div>

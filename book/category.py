@@ -93,6 +93,34 @@ def create():
     return render_template('category/create.html')
 
 
+@bp.route('/category/<int:id>/update', methods=('GET', 'POST'))
+@login_required
+def update(id):
+    category = get_cat(id)
+
+    if request.method == 'POST':
+        name = request.form['categorie']
+        error = None
+
+        if not name:
+            error = 'Category is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'UPDATE category SET name = ?'
+                ' WHERE id = ?',
+                (name, id)
+            )
+            db.commit()
+            flash('Catégorie modifiée !', 'success')
+            return redirect(url_for('category.get_cat_user'))
+
+    return render_template('category/update.html', category=category)
+
+
 @bp.route('/category/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):

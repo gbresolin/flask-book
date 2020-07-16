@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Modifier une catégorie{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+  <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+
+      <div class="col-lg-3">
+
+        <h1 class="my-4">Modifier une catégorie</h1>
+
+      </div>
+      <!-- /.col-lg-3 -->
+
+      <div class="col-lg-9">
+
+  <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+          <div class="col">
+          <div class="col-sm-6">
+          <div class="form-group">
+            <label for="categorie">Catégorie</label>
+              <input name="categorie" id="categorie" value="{{ request.form['categorie'] or category['name'] }}" class="form-control" required>
+          </div>
+
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+          </div>
+          </div>
+      </form>
+  </div>
+
+        </div>
+        <!-- /.row -->
+
+      </div>
+      <!-- /.col-lg-9 -->
+
+    </div>
+    <!-- /.row -->
+
+{% endblock %}

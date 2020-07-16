@@ -40,7 +40,7 @@
                   <td>{{ category['name'] }}</td>
                   <td>
                       <form action="{{ url_for('category.delete', id=category['id']) }}" method="post">
-                      <a role="button" class="btn btn-primary btn-sm mb-2" href="#" class="btn btn-danger"><i class="fas fa-edit"></i></a>
+                      <a role="button" class="btn btn-primary btn-sm mb-2" href="{{ url_for('category.update', id=category['id']) }}" class="btn btn-danger"><i class="fas fa-edit"></i></a>
                       <input class="btn btn-danger btn-sm mb-2" type="submit" value="Supprimer" onclick="return confirm('Are you sure?');">
                       </form>
                   </td>

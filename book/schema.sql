@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS cart;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,6 +35,14 @@ CREATE TABLE category (
 CREATE TABLE comment (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   comment text NOT NULL,
+  author_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  FOREIGN KEY (author_id) REFERENCES user (id),
+  FOREIGN KEY (product_id) REFERENCES product (id)
+);
+
+CREATE TABLE cart (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   author_id INTEGER NOT NULL,
   product_id INTEGER NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (id),

@@ -11,6 +11,10 @@ body {
     height: 250px;
 }
 
+.card-img-panier {
+    width: 100px;
+    height: 90px;
+}
 .card {
     text-align:center
 }
