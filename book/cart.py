@@ -10,6 +10,7 @@ from book.product import get_product_cart
 bp = Blueprint('cart', __name__)
 
 
+# On affiche le contenu du panier
 @bp.route('/cart')
 def cart():
     user_id = session.get('user_id')
@@ -25,6 +26,7 @@ def cart():
     ).fetchall()
 
     totalPrice = 0
+    # Pour calculer le prix total des articles dans le panier
     for row in panier:
         totalPrice += row[2]
 
@@ -32,20 +34,9 @@ def cart():
     return render_template('cart/index.html', panier=panier, totalPrice=totalPrice, cats=cats)
 
 
-def get_cart(id):
-    cart = get_db().execute(
-        'SELECT c.id'
-        ' FROM cart c JOIN user u ON c.author_id = u.id'
-        ' WHERE u.id = ?',
-        (id,)
-    ).fetchone()
-    return cart
-
-
 @bp.route('/cart/create/<int:id>', methods=('GET', 'POST'))
 @login_required
 def add_cart(id):
-    get_product_cart(id)
     user_id = session.get('user_id')
     db = get_db()
 
@@ -83,10 +74,10 @@ def add_cart(id):
         return redirect(url_for('cart.cart'))
 
 
+# Pour supprimer un produit du panier
 @bp.route('/cart/delete/<int:id>', methods=('GET', 'POST'))
 @login_required
 def delete_item(id):
-    get_cart(id)
     db = get_db()
     db.execute('DELETE FROM cart WHERE id = ?', (id,))
     db.commit()

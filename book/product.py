@@ -18,6 +18,7 @@ def search():
     query = "%" + request.args['q'] + "%"
 
     db = get_db()
+    # Pour afficher la liste des catégories dans le menu
     cats = all_category()
 
     searches = db.execute(
@@ -55,6 +56,7 @@ def detail(id):
     return render_template('product/detail.html', details=details, title=id, cats=cats, comments=comments)
 
 
+# On affiche la liste de tous les produits sur la page d'accueil
 @bp.route('/')
 def index():
     db = get_db()
@@ -68,10 +70,11 @@ def index():
     return render_template('product/home.html', products=products, cats=cats)
 
 
-# On liste les produits ajoutés par l'utilisateur
+# On liste dans une boutique façon Rakuten la liste des livres ajoutés par l'utilisateur
 @bp.route('/inventory')
 @login_required
 def inventory():
+    # On récupère l'ID de l'utilisateur en session
     user_id = session.get('user_id')
     db = get_db()
     products = db.execute(
@@ -108,6 +111,7 @@ def get_product_cart(id, check_author=True):
     return product
 
 
+# On récupère les infos du produit
 def get_product(id, check_author=True):
     product = get_db().execute(
         'SELECT p.id, name, description, price, state, created, author_id, username'
@@ -178,11 +182,10 @@ def update(id):
     return render_template('product/update.html', product=product, state_list=state_list, category_list=category_list)
 
 
+# Pour supprimer un produit
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_product(id)
-    get_image(id)
     db = get_db()
     file = get_image(id)
     location = "book/static/uploads"

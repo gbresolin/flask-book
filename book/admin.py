@@ -17,7 +17,6 @@ bp = Blueprint('admin', __name__)
 # On limite cette partie aux admins avec @admin_required
 
 @bp.route('/admin')
-@login_required
 @admin_required
 def all():
     db = get_db()
@@ -32,7 +31,6 @@ def all():
 
 
 @bp.route('/admin/category')
-@login_required
 @admin_required
 def category():
     db = get_db()
@@ -47,7 +45,6 @@ def category():
 
 
 @bp.route('/admin/product')
-@login_required
 @admin_required
 def product():
     db = get_db()
@@ -61,6 +58,22 @@ def product():
     return render_template('administration/product.html', products=products, cats=cats)
 
 
+@bp.route('/admin/order')
+@admin_required
+def order():
+    db = get_db()
+    orders = db.execute(
+        'SELECT c.id, c.created, p.name, p.price, u.username'
+        ' FROM command c'
+        ' JOIN user u ON c.author_id = u.id'
+        ' JOIN product p ON c.product_id = p.id'
+        ' ORDER BY p.name ASC'
+    ).fetchall()
+
+    cats = all_category()
+    return render_template('administration/command.html', orders=orders, cats=cats)
+
+# Pour récupérer les infos de l'utilisateur
 def get_user(id):
     user = get_db().execute(
         'SELECT id, username, isAdmin'
@@ -75,7 +88,6 @@ def get_user(id):
 
 
 @bp.route('/user/<int:id>/delete', methods=('POST',))
-@login_required
 @admin_required
 def delete(id):
     db = get_db()
@@ -86,7 +98,6 @@ def delete(id):
 
 
 @bp.route('/admin/category/<int:id>/delete', methods=('POST',))
-@login_required
 @admin_required
 def delete_category(id):
     db = get_db()
@@ -97,7 +108,6 @@ def delete_category(id):
 
 
 @bp.route('/product/<int:id>/delete', methods=('POST',))
-@login_required
 @admin_required
 def delete_product(id):
     get_image(id)
@@ -114,7 +124,6 @@ def delete_product(id):
 
 
 @bp.route('/user/<int:id>/update', methods=('GET', 'POST'))
-@login_required
 @admin_required
 def update(id):
     user = get_user(id)

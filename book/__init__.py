@@ -56,6 +56,10 @@ def create_app(test_config=None):
     app.register_blueprint(cart.bp)
     app.add_url_rule('/', endpoint='home')
 
+    from . import order
+    app.register_blueprint(order.bp)
+    app.add_url_rule('/', endpoint='home')
+
     app.config["IMAGE_UPLOADS"] = "book/static/uploads"
     app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
     app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
@@ -74,6 +78,7 @@ def create_app(test_config=None):
             error = 'Format non autorisé !'
             flash(error)
 
+    # On vérifie que la taille du fichier n'est pas supérieure à la taille max autorisée
     def allowed_image_filesize(filesize):
         if int(filesize) <= app.config["MAX_IMAGE_FILESIZE"]:
             return True
@@ -115,8 +120,8 @@ def create_app(test_config=None):
                         date = date.strftime('%d%m%Y%M%S')
                         new_filename = "book_" + date + ".{}".format(ext)
 
+                        # On sauvegarde l'image dans le dossier uploads
                         image.save(os.path.join(app.config["IMAGE_UPLOADS"], new_filename))
-
                         print("Image sauvegardée")
 
             picture = request.files["image"]
@@ -152,6 +157,7 @@ def create_app(test_config=None):
 
         return render_template('product/create.html', state_list=state_list, categories=categories)
 
+    # Test upload image pour vérifier que ça fonctionne bien
     @app.route("/upload-image", methods=["GET", "POST"])
     def upload_image():
 
@@ -178,8 +184,8 @@ def create_app(test_config=None):
                         date = date.strftime('%d%m%Y%M%S')
                         new_filename = "book_" + date + ".{}".format(ext)
 
+                        # On sauvegarde l'image dans le dossier uploads
                         image.save(os.path.join(app.config["IMAGE_UPLOADS"], new_filename))
-
                         print("Image sauvegardée")
 
                         return redirect(request.base_url)
@@ -190,7 +196,7 @@ def create_app(test_config=None):
 
         return render_template("upload_image.html")
 
-    # Errors
+    # Gestion des erreurs
     @app.errorhandler(404)
     def not_found(e):
 

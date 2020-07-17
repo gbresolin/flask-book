@@ -20,6 +20,7 @@ def all_category():
     return categories
 
 
+# On affiche les catégories ajoutées par l'utilisateur
 @bp.route('/category/index')
 @login_required
 def get_cat_user():
@@ -131,10 +132,10 @@ def update(id):
     return render_template('category/update.html', category=category)
 
 
+# Pour supprimer une catégorie
 @bp.route('/category/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_cat(id)
     db = get_db()
     db.execute('DELETE FROM category WHERE id = ?', (id,))
     db.commit()

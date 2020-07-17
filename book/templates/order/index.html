@@ -2,7 +2,7 @@
 
 {% extends 'base.html' %}
 
-{% block title %}BookShop : Mon Panier{% endblock %}
+{% block title %}BookShop : Mes commandes{% endblock %}
 
 {% block content %}
 
@@ -11,7 +11,7 @@
     <p class="lead">Sur BookShop, achetez et vendez vos livres neufs ou d'occasion !</p>
 <section class="jumbotron text-center">
     <div class="container">
-        <h1 class="jumbotron-heading">MON PANIER</h1>
+        <h1 class="jumbotron-heading">MES COMMANDES</h1>
      </div>
 </section>
 
@@ -19,7 +19,10 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
-                {% if panier %}
+                {% if command %}
+                {% for order in command %}
+                <h2>Commande N° {{ order['id'] }} du {{ order['created'].strftime('%d-%m-%Y %H:%M:%S') }}</h2>
+                  {% endfor %}
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -33,31 +36,27 @@
                     </thead>
                     <tbody>
                     {% endif %}
-                    {% for cart in panier %}
+                    {% for order in command %}
                         <tr>
                             <td>
-                              {% if cart['image'] %}
-                              <img class="card-img-panier" src="/static/uploads/{{ cart['image'] }}" alt="">
+                              {% if order['image'] %}
+                              <img class="card-img-panier" src="/static/uploads/{{ order['image'] }}" alt="">
                               {% else %}
                               <img class="card-img-panier" src="http://placehold.it/700x400" alt="">
                               {% endif %}
                             </td>
-                            <td>{{ cart['name'] }}</td>
+                            <td>{{ order['name'] }}</td>
                             <td>En stock</td>
                             <td><input class="form-control" type="text" value="1" /></td>
-                            <td class="text-right">{{ cart['price'] }} €</td>
+                            <td class="text-right">{{ order['price'] }} €</td>
                             <td class="text-right">
-                            <form action="{{ url_for('cart.delete_item', id=cart['id']) }}" method="post">
-                              <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button>
-                            </form>
-
                             </td>
                         </tr>
                   {% if not loop.last %}
                   {% endif %}
-                    {% endfor %}
+                  {% endfor %}
 
-                  {% if panier %}
+                  {% if command %}
                         <tr>
                             <td></td>
                             <td></td>
@@ -87,27 +86,9 @@
                 </table>
             </div>
         </div>
-        {% if panier %}
-        {% for cart in panier %}
-        {% if not loop.last %}
-        <div class="col mb-2">
-            <div class="row">
-                <div class="col-sm-12  col-md-6">
-                    <a href="/"><button class="btn btn-block btn-light">Continuer mon Shopping</button></a>
-                </div>
-                <div class="col-sm-12 col-md-6 text-right">
-                    <form action="{{ url_for('order.add_order', id=cart['id']) }}" method="post">
-                      <input class="btn btn-success mb-2" type="submit" value="Payer" onclick="return confirm('Acheter ce produit ?');">
-                    </form>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-
-        {% if not panier %}
-        <p>Votre panier est vide</p>
+        {% if command %}
+        {% else %}
+        <p>Vous n'avez pas de commande en cours</p>
         {% endif %}
     </div>
 </div>

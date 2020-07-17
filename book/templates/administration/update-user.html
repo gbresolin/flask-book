@@ -30,7 +30,7 @@
 
           <div class="form-group">
             <label for="admin">Admin (1 if Admin, else 0)</label>
-              <input name="admin" id="admin" value="{{ request.form['admin'] or user['admin'] }}" class="form-control" required>
+              <input name="admin" id="admin" value="{{ request.form['isAdmin'] or user['isAdmin'] }}" class="form-control" required>
           </div>
 
             <button type="submit" class="btn btn-primary">Enregistrer</button>
