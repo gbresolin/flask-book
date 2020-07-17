@@ -62,14 +62,14 @@ def add_cart(id):
                 flash('Cet article est déjà dans votre panier.', 'danger')
                 return redirect(url_for('cart.cart'))
             else:
-                    db.execute(
-                        'INSERT INTO cart (product_id, author_id)'
-                        ' VALUES (?, ?)',
-                        (id, g.user['id'])
-                    )
-                    db.commit()
-                    flash('Article ajouté dans votre panier !', 'success')
-                    return redirect(url_for('cart.cart'))
+                db.execute(
+                    'INSERT INTO cart (product_id, author_id)'
+                    ' VALUES (?, ?)',
+                    (id, g.user['id'])
+                )
+                db.commit()
+                flash('Article ajouté dans votre panier !', 'success')
+                return redirect(url_for('cart.cart'))
 
     else:
         db.execute(
