@@ -80,9 +80,9 @@ def create_app(test_config=None):
         else:
             return False
 
-    @app.route('/create', methods=('GET', 'POST'))
+    @app.route('/add-book', methods=('GET', 'POST'))
     @login_required
-    def create_product():
+    def add_book():
         state_list = ['Neuf', 'Très bon état', 'Bon état', 'Etat correct', 'Mauvais état']
 
         db = get_db()
@@ -117,7 +117,7 @@ def create_app(test_config=None):
 
                         image.save(os.path.join(app.config["IMAGE_UPLOADS"], new_filename))
 
-                        print("Image saved")
+                        print("Image sauvegardée")
 
             picture = request.files["image"]
             filename = secure_filename(picture.filename)
@@ -180,12 +180,12 @@ def create_app(test_config=None):
 
                         image.save(os.path.join(app.config["IMAGE_UPLOADS"], new_filename))
 
-                        print("Image saved")
+                        print("Image sauvegardée")
 
                         return redirect(request.base_url)
 
                     else:
-                        print("That file extension is not allowed")
+                        print("Le type de fichier n'est pas autorisé !")
                         return redirect(request.url)
 
         return render_template("upload_image.html")

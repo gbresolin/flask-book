@@ -9,6 +9,16 @@ from book.db import get_db
 bp = Blueprint('category', __name__)
 
 
+def all_category():
+    db = get_db()
+    categories = db.execute(
+        'SELECT id, name'
+        ' FROM category'
+        ' ORDER BY name ASC'
+    ).fetchall()
+    return categories
+
+
 @bp.route('/category/index')
 @login_required
 def get_cat_user():
@@ -22,21 +32,17 @@ def get_cat_user():
         , (user_id,)
     ).fetchall()
 
+    cats = all_category()
+
     if not categories:
         flash('Vous n\'avez pas encore ajouté de catégorie.', 'danger')
 
-    return render_template('category/index.html', categories=categories)
+    return render_template('category/index.html', categories=categories, cats=cats)
 
 
 @bp.route('/category/<int:id>')
 def detail(id):
     db = get_db()
-    cats = db.execute(
-        'SELECT id, name'
-        ' FROM category'
-        ' ORDER BY name DESC'
-    ).fetchall()
-
     details = db.execute(
         'SELECT *'
         ' FROM product JOIN category ON product.category_id = category.id'
@@ -46,6 +52,8 @@ def detail(id):
 
     if not details:
         flash('Pas de livres trouvés pour cette catégorie.', 'danger')
+
+    cats = all_category()
 
     return render_template('category/detail.html', details=details, title=id, cats=cats)
 
@@ -65,16 +73,6 @@ def get_cat(id, check_author=True):
         abort(403)
 
     return product
-
-
-def all_category():
-    db = get_db()
-    categories = db.execute(
-        'SELECT id, name'
-        ' FROM category'
-        ' ORDER BY name ASC'
-    ).fetchall()
-    return categories
 
 
 @bp.route('/category/create', methods=('GET', 'POST'))
