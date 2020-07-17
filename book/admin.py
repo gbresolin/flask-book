@@ -14,6 +14,8 @@ from book.product import get_image
 bp = Blueprint('admin', __name__)
 
 
+# On limite cette partie aux admins avec @admin_required
+
 @bp.route('/admin')
 @login_required
 @admin_required
@@ -104,6 +106,7 @@ def delete_product(id):
     db = get_db()
     db.execute('DELETE FROM product WHERE id = ?', (id,))
     for filename in file:
+        # On supprime l'image du produit dans le dossier uploads
         os.remove(os.path.join(location, filename))
     db.commit()
     flash('Livre supprimé !', 'success')

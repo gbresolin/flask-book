@@ -9,6 +9,7 @@ from book.db import get_db
 bp = Blueprint('category', __name__)
 
 
+# Pour afficher toutes les catégories
 def all_category():
     db = get_db()
     categories = db.execute(

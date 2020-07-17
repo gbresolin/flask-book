@@ -122,6 +122,7 @@ def get_product(id, check_author=True):
     return product
 
 
+# On va chercher l'image du produit sélectionné
 def get_image(id):
     get_product(id)
     image = get_db().execute(
@@ -130,7 +131,6 @@ def get_image(id):
         ' WHERE id = ?',
         (id,)
     ).fetchone()
-
     return image
 
 
@@ -185,6 +185,7 @@ def delete(id):
     location = "book/static/uploads"
     db.execute('DELETE FROM product WHERE id = ?', (id,))
     for filename in file:
+        # On supprime l'image du produit dans le dossier uploads
         os.remove(os.path.join(location, filename))
     db.commit()
     flash('Livre supprimé !', 'success')

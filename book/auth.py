@@ -20,6 +20,7 @@ def register():
         db = get_db()
         error = None
 
+        # On ajoute des vérifications avec contraintes de mot de passe
         if not username:
             error = 'Veuillez renseigner un login.'
         elif not password:
@@ -113,6 +114,7 @@ def login_required(view):
     return wrapped_view
 
 
+# Pour vérifier si l'utilisateur est un admin
 def admin_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):

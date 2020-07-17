@@ -57,6 +57,7 @@ def add_cart(id):
     ).fetchone()
 
     if verifexistitem is not None:
+        # On fait un boucle pour vérifier si le produit a déjà ajouté au panier
         for itemid in verifexistitem:
             while itemid == id:
                 flash('Cet article est déjà dans votre panier.', 'danger')
