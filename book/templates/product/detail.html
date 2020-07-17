@@ -34,7 +34,7 @@
             <br />
           </div>
                     {% if g.user['id'] != product['author_id'] %}
-                    <form action="{{ url_for('cart.addCart', id=product['id']) }}" method="post">
+                    <form action="{{ url_for('cart.add_cart', id=product['id']) }}" method="post">
                       <input class="btn btn-success mb-2" type="submit" value="Ajouter au panier" onclick="return confirm('Ajouter ce produit au panier ?');">
                     </form>
                     {% endif %}

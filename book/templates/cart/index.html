@@ -47,7 +47,7 @@
                             <td><input class="form-control" type="text" value="1" /></td>
                             <td class="text-right">{{ cart['price'] }} €</td>
                             <td class="text-right">
-                            <form action="{{ url_for('cart.deleteItem', id=cart['id']) }}" method="post">
+                            <form action="{{ url_for('cart.delete_item', id=cart['id']) }}" method="post">
                               <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button>
                             </form>
 
@@ -55,6 +55,7 @@
                         </tr>
                   {% if not loop.last %}
                   {% endif %}
+                  {% endfor %}
                         <tr>
                             <td></td>
                             <td></td>
@@ -80,7 +81,6 @@
                             <td class="text-right"><strong>{{totalPrice + 6.90 | round }} €</strong></td>
                         </tr>
                     </tbody>
-                    {% endfor %}
                 </table>
             </div>
         </div>
@@ -88,7 +88,7 @@
         <div class="col mb-2">
             <div class="row">
                 <div class="col-sm-12  col-md-6">
-                    <button class="btn btn-block btn-light">Continue Shopping</button>
+                    <a href="/"><button class="btn btn-block btn-light">Continuer mon Shopping</button></a>
                 </div>
                 <div class="col-sm-12 col-md-6 text-right">
                     <button class="btn btn-lg btn-block btn-success text-uppercase">Payer</button>

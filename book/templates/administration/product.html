@@ -56,7 +56,7 @@
                   <td>{{ admin['state'] }}</td>
                   <td>
                       <form action="{{ url_for('admin.delete_product', id=admin['id']) }}" method="post">
-                      <input class="btn btn-danger btn-sm mb-2" type="submit" value="Supprimer" onclick="return confirm('Are you sure?');">
+                      <input class="btn btn-danger btn-sm mb-2" type="submit" value="Supprimer" onclick="return confirm('Vous êtes sur le point de supprimer un livre ?');">
                       </form>
                   </td>
                 </tr>

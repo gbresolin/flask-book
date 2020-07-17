@@ -54,7 +54,6 @@ def detail(id):
         flash('Pas de livres trouvés pour cette catégorie.', 'danger')
 
     cats = all_category()
-
     return render_template('category/detail.html', details=details, title=id, cats=cats)
 
 
@@ -78,6 +77,8 @@ def get_cat(id, check_author=True):
 @bp.route('/category/create', methods=('GET', 'POST'))
 @login_required
 def create():
+    cats = all_category()
+
     if request.method == 'POST':
         name = request.form['name']
         error = None
@@ -98,7 +99,7 @@ def create():
             flash('Catégorie ajoutée !', 'success')
             return redirect(url_for('category.get_cat_user'))
 
-    return render_template('category/create.html')
+    return render_template('category/create.html', cats=cats)
 
 
 @bp.route('/category/<int:id>/update', methods=('GET', 'POST'))
