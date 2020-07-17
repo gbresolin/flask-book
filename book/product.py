@@ -12,6 +12,7 @@ from book.db import get_db
 bp = Blueprint('product', __name__)
 
 
+# Pour effectuer des recherches
 @bp.route('/search', methods=['GET', 'POST'])
 def search():
     query = "%" + request.args['q'] + "%"
@@ -25,6 +26,7 @@ def search():
         ' where name like ? OR description like ?', (query, query,)
     ).fetchall()
 
+    # Si pas de résultats trouvés
     if not searches:
         flash('Pas de résultats trouvés pour ' + query.replace("%", ""), 'danger')
     return render_template('product/search.html', searches=searches, query=query.replace("%", ""), cats=cats)
@@ -63,10 +65,10 @@ def index():
     ).fetchall()
 
     cats = all_category()
-
     return render_template('product/home.html', products=products, cats=cats)
 
 
+# On liste les produits ajoutés par l'utilisateur
 @bp.route('/inventory')
 @login_required
 def inventory():
@@ -99,6 +101,7 @@ def get_product_cart(id, check_author=True):
     if product is None:
         abort(404, "Le produit id {0} n'existe pas.".format(id))
 
+    # On empêche un utilisateur de mettre au panier son propre produit
     if check_author and product['author_id'] == g.user['id']:
         abort(403)
 
